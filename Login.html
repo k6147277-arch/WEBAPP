@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindWell - Iniciar Sesión</title>
+    
+    <style>
+        /* variables de color*/
+        :root {
+            --color-dark-blue: #2c3e50;
+            --color-light-blue: #3498db;
+            --color-text-dark: #333;
+            --color-background: #f4f7f6;
+            --color-border-subtle: #ddd;
+            --color-social-twitter: #1DA1F2;
+            --color-social-facebook: #3b5998;
+        }
+
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white; /* Fondo blanco según la imagen */
+            color: var(--color-text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* barra de navegacion*/
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background-color: white;
+            border-bottom: 1px solid var(--color-border-subtle);
+        }
+
+        .navbar .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--color-light-blue); 
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            gap: 25px;
+        }
+
+        .navbar .nav-links li a {
+            text-decoration: none;
+            color: var(--color-text-dark);
+            font-size: 1em;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links li a:hover {
+            color: var(--color-light-blue);
+        }
+
+        
+        .navbar .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            border: 1px solid var(--color-light-blue);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar .login-btn {
+            background-color: transparent;
+            color: var(--color-light-blue);
+        }
+        .navbar .login-btn:hover {
+            background-color: #f0f8ff;
+        }
+
+        .navbar .signup-btn {
+            background-color: var(--color-light-blue);
+            color: white;
+            margin-left: 10px;
+        }
+        .navbar .signup-btn:hover {
+            background-color: #2980b9;
+        }
+
+        
+        .container {
+            flex-grow: 1; /* Ocupa el espacio restante */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+        }
+
+        /* Estructura de las dos columnas */
+        .login-box, .image-box {
+            height: 600px; 
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        
+        .login-box {
+            width: 40%;
+            min-width: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .image-box {
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #9b59b6;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
+            background-color: var(--color-background);
+        }
+
+        .cloud-icon {
+            font-size: 4em;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+            position: absolute;
+            top: 150px;
+            left: 20%;
+        }
+
+        /* Estilos de inicio*/
+        .login-box h2 {
+            font-size: 2.5em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .login-box p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .login-box form {
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-border-subtle);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        .login-box button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--color-dark-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-box button[type="submit"]:hover {
+            background-color: #1f3242;
+        }
+
+        /* Botones de Redes Sociales */
+        .social-login {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+        .social-login button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        .social-login button:hover { opacity: 0.9; }
+
+        .social-login .twitter-btn {
+            background-color: var(--color-social-twitter);
+            color: white;
+        }
+        .social-login .facebook-btn {
+            background-color: var(--color-social-facebook);
+            color: white;
+        }
+
+        /* Enlaces inferiores */
+        .login-box .links {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #999;
+        }
+        .login-box .links a {
+            color: var(--color-light-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-box .links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Estilo de la imagen de reemplazo */
+        .image-box .placeholder-image {
+            font-size: 2em;
+            color: #999;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo">MindWell</div>
+        <ul class="nav-links">
+            <li><a href="SobreNosotros.html">Sobre nosotros</a></li>
+            <li><button class="action-btn login-btn">Iniciar Sesion</button></li> 
+            <li><button class="action-btn signup-btn">Registrarse</button></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="cloud-icon">☁️</div> 
+
+        <section class="login-box">
+            <h2>Iniciar sesion</h2>
+            <p>Bienvenido!</p>
+
+            <form action="Inicio.html" method="get">
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required> 
+                <div class="links" style="justify-content: flex-end; margin-bottom: 10px;">
+                    <a href="#">olvido su clave?</a>
+                </div>
+
+                <button type="submit">
+                    Inicar Sesion
+                </button>
+            </form>
+            
+            <p style="text-align: center; width: 100%; max-width: 350px; font-size: 0.8em; color: #999; margin: 15px 0;">
+                Inicar con una red social
+            </p>
+
+            <div class="social-login">
+                <button class="twitter-btn">X Twitter</button>
+                <button class="facebook-btn">f Facebook</button>
+            </div>
+            
+            <div class="links">
+                <a href="#">Iniciar sesion</a>
+            </div>
+        </section>
+
+        <section class="image-box">
+            <div class="placeholder-image">
+                <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 8l-3 3-4-4-3 3 5 5 7-7 3 3V3H3z"/>
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                </svg>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
