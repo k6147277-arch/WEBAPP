@@ -3,456 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindWell - Mi Diario</title>
-    
-    <style>
-        
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-
-        /* Variables de color */
-        :root {
-            --color-dark-blue: #2c3e50; /* Fondo principal de la barra lateral*/
-            --color-light-blue: #3498db; /* Azul de botón*/
-            --color-text-light: #ecf0f1; 
-            --color-text-dark: #34495e; 
-            --color-border-light: #bdc3c7;
-            --color-hover: #34495e; 
-
-            /* Colores para el calendario*/
-            --color-red: #e74c3c;
-            --color-green: #2ecc71;
-            --color-orange: #f39c12;
-            --color-blue: #3498db;
-            --color-purple: #9b59b6;
-            --color-yellow: #f1c40f;
-            --color-grey-text: #666;
-            --color-cal-bg: #2c3e50; /* Fondo azul oscuro del calendario */
-            --color-cal-text-light: #ecf0f1;
-        }
-
-
-        /* Estilos de la barra lateral*/
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 220px; /* Vuelve al ancho original */
-            background-color: var(--color-dark-blue); /* Fondo azul oscuro */
-            color: var(--color-text-light);
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Estilo del título MindWell en la barra lateral */
-        .sidebar .logo {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding: 0 20px;
-            color: var(--color-text-light);
-            letter-spacing: 1px;
-            width: 100%; 
-            text-align: center;
-        }
-
-        /* Contenedor de la navegación principal  */
-        .sidebar .nav-links {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 30px; 
-            width: 100%;
-        }
-
-        .sidebar .nav-links a {
-            display: block;
-            padding: 15px 20px;
-            color: var(--color-text-light);
-            text-decoration: none;
-            transition: background-color 0.3s;
-            font-size: 1.1em;
-        }
-
-        /* Efecto al pasar el ratón para ambos grupos de enlaces */
-        .sidebar .nav-links a:hover {
-            background-color: var(--color-hover);
-        }
-
-        /* Estilo para el enlace*/
-        .sidebar .nav-links a.active {
-            background-color: var(--color-light-blue);
-            color: white;
-            font-weight: 600;
-            border-left: 5px solid white;
-            padding-left: 15px;
-        }
-        
-        /* Estilos para el título secundario*/
-        .sidebar h1 {
-            font-size: 1.2em;
-            color: var(--color-border-light);
-            padding: 0 20px 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            margin-top: 0;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        .sidebar .secondary-links {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .sidebar .secondary-links a {
-            display: block;
-            font-size: 1em; 
-            padding: 10px 20px;
-            color: var(--color-text-light);
-            text-decoration: none;
-        }
-        .sidebar .secondary-links a:hover { background-color: var(--color-hover); }
-
-
-        /* Estilos*/
-        .main {
-            margin-left: 220px; /* Vuelve al margen original */
-            padding: 30px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Centra el contenido como el calendario */
-            gap: 25px; 
-        }
-
-        /* Header con el título del diario y el botón "+ Nueva Entrada" */
-        .main .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 900px; /* Limita el ancho del header */
-            padding-bottom: 15px; 
-            margin-bottom: 0; 
-        }
-
-        .main .header h1 {
-            color: var(--color-text-dark);
-            margin: 0;
-            font-size: 2em; 
-        }
-        
-        .main .new-entry {
-            background-color: var(--color-light-blue);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .main .new-entry:hover { background-color: #2980b9; }
-
-
-        /* nuevo calendario */
-        .calendar-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            width: fit-content;
-            margin: 0; /* Desactiva el centrado automático */
-            align-self: center; /* Centra la sección dentro del main */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 5px 0;
-        }
-
-        .calendar-header .month-year {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: var(--color-text-dark);
-            text-align: center;
-            flex-grow: 1;
-        }
-
-        .calendar-header button {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            color: var(--color-text-dark);
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-        }
-        .calendar-header button:hover { background-color: #eee; }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-            background-color: var(--color-dark-blue); 
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .calendar-grid .day-name {
-            font-weight: bold;
-            color: var(--color-cal-text-light);
-            padding: 10px 0;
-            font-size: 0.9em;
-        }
-
-        .calendar-grid .day-cell {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 0;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            color: var(--color-cal-text-light);
-            font-size: 1.1em;
-            box-sizing: border-box;
-        }
-        
-        .calendar-grid .day-cell.inactive {
-            color: var(--color-grey-text); 
-            cursor: default;
-            opacity: 0.6;
-        }
-
-        .calendar-grid .day-cell.active-day {
-            border: 2px solid var(--color-light-blue);
-            background-color: rgba(52, 152, 219, 0.2);
-        }
-
-        .day-cell .mood-icon {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            font-size: 0.7em; 
-            line-height: 1;
-        }
-
-        /* Colores para días específicos */
-        .day-cell.mood-red { background-color: var(--color-red); color: white; }
-        .day-cell.mood-green { background-color: var(--color-green); color: white; }
-        .day-cell.mood-yellow { background-color: var(--color-yellow); color: var(--color-text-dark); }
-        .day-cell.mood-blue { background-color: var(--color-blue); color: white; }
-        .day-cell.mood-orange { background-color: var(--color-orange); color: white; }
-
-
-        /* Estilos de eentradas */
-        .main .entry {
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            border-left: 5px solid var(--color-light-blue);
-            width: 100%;
-            max-width: 900px;
-            align-self: center; /* Asegura que las entradas se centren bajo el calendario */
-        }
-
-        .main .entry h2 {
-            color: var(--color-text-dark);
-            padding-bottom: 5px;
-            border-bottom: 1px dashed var(--color-border-light);
-            margin-top: 0;
-            font-size: 1.5em;
-        }
-        
-        .main .moods {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center; 
-        }
-        .main .moods p {
-            margin: 0 10px 0 0;
-            font-weight: 600;
-            color: var(--color-text-dark);
-        }
-
-        .main .mood {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            font-weight: 500;
-            font-size: 0.9em;
-        }
-
-        /* Colores específicos para los estados de ánimo (ejemplos) */
-        .main .mood.fatal { background-color: #e74c3c; color: white; }
-        .main .mood.sad { background-color: #f39c12; color: white; }
-        .main .mood.meh { background-color: #f1c40f; color: #333; }
-        .main .mood.ok { background-color: #2ecc71; color: white; }
-        .main .mood.happy { background-color: #3498db; color: white; }
-        .main .mood.super { background-color: #9b59b6; color: white; }
-        .main .mood.estupendo { background-color: #1abc9c; color: white; }
-
-        .info-section { display: none; }
-    </style>
+    <title>MindWell - Mi Diario Personal</title>
+    <link rel="stylesheet" href="style/diario.css">
 </head>
 <body>
-    
-    <aside class="sidebar">
-        <div class="logo">MindWell</div>
 
+    <nav class="sidebar">
+        <div class="logo">MindWell</div>
         <ul class="nav-links">
             <li><a href="Inicio.html">Inicio</a></li>
-            <li><a class="active" href="Diario.html">Diario</a></li>
+            <li class="parent-active"><a href="Diario.html">Diario</a></li>
             <li><a href="chats.html">Mensajes</a></li>
             <li><a href="Perfil.html">Perfil</a></li>
             <li><a href="Configuracion.html">Configuración</a></li>
+            
+            <li class="sub-section-link"><a href="Diario.html" class="active-sub">Diario personal</a></li>
+            <li class="sub-section-link"><a href="Registro.html"><span class="icon">⚡</span> Test Diario</a></li>
+            <li class="sub-section-link"><a href="Estadistica.html"><span class="icon">📊</span> Estadísticas</a></li>
         </ul>
-        
-        <h1>Diario personal</h1>
-        <ul class="secondary-links">
-            <li><a href="Registro.html">⚡ Registro rápido</a></li>
-            <li><a href="Estadistica.html">📊 Estadísticas</a></li>
-        </ul>
-    </aside>
+    </nav>
 
-    <main class="main">
-        <header class="header">
-            <h1>Mi Diario: Abril 2025</h1>
-            <button class="new-entry">+ Nueva Entrada</button>
-        </header>
+    <main class="main-content">
         
-        <section class="calendar-section">
-            <div class="calendar-header">
-                <button>&lt;</button>
-                <span class="month-year">Abril 2025</span>
-                <button>&gt;</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; border-bottom: none;">Mi Diario: <span id="current-month-year-title">Abril 2025</span></h2>
+            <button id="new-entry-btn" style="padding: 10px 20px; background-color: var(--color-light-blue); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">+ Nueva Entrada</button>
+        </div>
+
+        <section class="diary-calendar-section">
+            <div class="calendar-nav">
+                <button id="prev-month-btn">&#9664;</button> 
+                <span id="current-month-year">Abril 2025</span> 
+                <button id="next-month-btn">&#9654;</button> 
             </div>
             
-            <div class="calendar-grid">
-                <div class="day-name">DOM</div>
-                <div class="day-name">LUN</div>
-                <div class="day-name">MAR</div>
-                <div class="day-name">MIÉ</div>
-                <div class="day-name">JUE</div>
-                <div class="day-name">VIE</div>
-                <div class="day-name">SÁB</div>
+            <div class="calendar-grid" id="calendar-days-grid">
+                </div> 
+        </section>
+
+        <section class="entry-view-panel" id="entry-view-panel">
+            <h3>Entrada del día: <span id="entry-display-date">Selecciona una fecha</span></h3>
+            <p id="entry-display-text" style="color: #555; line-height: 1.6;">Selecciona un día en el calendario para ver tu entrada o usa "Nueva Entrada" para comenzar.</p>
+        </section>
+
+        <div id="entry-modal" class="modal">
+            <div class="modal-content">
+                <h3>Nueva Entrada de Diario: <span id="modal-date"></span></h3>
                 
-                <div class="day-cell inactive">30</div>
-                <div class="day-cell inactive">31</div>
+                <textarea id="diary-entry-text" placeholder="¿Cómo estuvo tu día? Escribe tu reflexión aquí..." style="width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px; resize: none;"></textarea>
                 
-                <div class="day-cell">1</div>
-                <div class="day-cell">2</div>
-                <div class="day-cell mood-red">3<span class="mood-icon">😥</span></div>
-                <div class="day-cell mood-red">4<span class="mood-icon">😠</span></div>
-                <div class="day-cell">5</div>
-
-                <div class="day-cell mood-green">6<span class="mood-icon">😊</span></div>
-                <div class="day-cell">7</div>
-                <div class="day-cell">8</div>
-                <div class="day-cell">9</div>
-                <div class="day-cell">10</div>
-                <div class="day-cell">11</div>
-                <div class="day-cell">12</div>
-
-                <div class="day-cell mood-blue">13<span class="mood-icon">😐</span></div>
-                <div class="day-cell">14</div>
-                <div class="day-cell mood-orange">15<span class="mood-icon">😟</span></div>
-                <div class="day-cell mood-yellow">16<span class="mood-icon">🤔</span></div>
-                <div class="day-cell">17</div>
-                <div class="day-cell">18</div>
-                <div class="day-cell">19</div>
-
-                <div class="day-cell mood-orange">20<span class="mood-icon">😡</span></div>
-                <div class="day-cell">21</div>
-                <div class="day-cell">22</div>
-                <div class="day-cell">23</div>
-                <div class="day-cell">24</div>
-                <div class="day-cell mood-blue active-day">25<span class="mood-icon">😥</span></div>
-                <div class="day-cell">26</div>
-
-                <div class="day-cell">27</div>
-                <div class="day-cell">28</div>
-                <div class="day-cell">29</div>
-                <div class="day-cell">30</div>
+                <div id="emotion-selection" style="margin-bottom: 20px;">
+                    </div>
                 
-                <div class="day-cell inactive">1</div>
-                <div class="day-cell inactive">2</div>
-                <div class="day-cell inactive">3</div>
+                <div style="text-align: right;">
+                    <button id="cancel-entry-btn" style="padding: 10px 15px; background: #ccc; border: none; border-radius: 4px; margin-right: 10px; cursor: pointer;">Cancelar</button>
+                    <button id="save-entry-btn" style="padding: 10px 15px; background: var(--color-light-blue); color: white; border: none; border-radius: 4px; cursor: pointer;" disabled>Guardar Entrada</button>
+                </div>
             </div>
-        </section>
-
-        
-        <section class="entry">
-            <h2>Entrada del día: 25 de Abril</h2>
-            <p>Hoy me siento muy triste, mi gran compañero del alma, el señor Bigotes, descansa en paz en su pequeña tumba junto a su ratoncito chillón. No creo poder superar su falta, era mi amigo de aventuras desde pequeñito.</p>
-            
-            <div class="moods">
-                <p>Mi estado de ánimo fue:</p>
-                <button class="mood fatal">Fatal 😭</button>
-               
-            </div>
-        </section>
-        
-        <section class="entry">
-            <h2>Entrada del día: 24 de Abril</h2>
-            <p>Tuve un día productivo en el trabajo, logré terminar todos los pendientes antes de la hora de salida. ¡Me siento aliviado y un poco orgulloso!</p>
-            <div class="moods">
-                <p>Mi estado de ánimo fue:</p>
-                <button class="mood ok">Bien 😐</button>
-            </div>
-        </section>
-        <section class="entry">
-            <h2>Entrada del día: 23 de Abril</h2>
-            <p>Este es un párrafo de relleno para asegurarnos de que el contenido sea lo suficientemente largo para que la barra lateral permanezca fija mientras esta sección se desplaza.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-            <div class="moods">
-                <p>Mi estado de ánimo fue:</p>
-                <button class="mood sad">Mal 😥</button>
-            </div>
-        </section>
-        <section class="entry">
-            <h2>Entrada del día: 22 de Abril </h2>
-            <p>Más contenido para probar el desplazamiento del área principal.</p>
-            <p>La funcionalidad de la barra lateral fija es perfecta para aplicaciones como un diario, ya que siempre tienes la navegación a mano.</p>
-            <div class="moods">
-                <p>Mi estado de ánimo fue:</p>
-                <button class="mood happy">Feliz 😊</button>
-            </div>
-        </section>
-
+        </div>
     </main>
+    
+    <script src="javascript/diario.js"></script> 
 </body>
 </html>

@@ -4,339 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindWell - Mensajes</title>
+    <link rel="stylesheet" href="style/chats.css">
     
-    <style>
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-
-        /* Variables de color */
-        :root {
-            --color-dark-blue: #2c3e50;
-            --color-light-blue: #3498db;
-            --color-text-light: #ecf0f1;
-            --color-text-dark: #34495e;
-            --color-border-light: #bdc3c7;
-            --color-hover: #34495e;
-            
-            /* Colores específicos del chat */
-            --chat-bg-sidebar: #fff;
-            --chat-bubble-user: #3498db; /* Azul para burbujas propias */
-            --chat-bubble-other: #e9ecef; /* Gris claro para burbujas del doctor */
-        }
-
-
-        /* Estilos de barra fija */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 220px;
-            background-color: var(--color-dark-blue);
-            color: var(--color-text-light);
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .sidebar .logo {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding: 0 20px;
-            color: var(--color-text-light);
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            text-align: center;
-        }
-
-        .sidebar .nav-links { list-style: none; padding: 0; margin-bottom: 30px; width: 100%; }
-        .sidebar .nav-links a {
-            display: block;
-            padding: 15px 20px;
-            color: var(--color-text-light);
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-            font-size: 1.1em;
-        }
-
-        .sidebar .nav-links a:hover { background-color: var(--color-hover); color: white; }
-
-        .sidebar .nav-links a.active {
-            background-color: var(--color-light-blue);
-            color: white;
-            font-weight: 600;
-            border-left: 5px solid white;
-            padding-left: 15px;
-        }
-        
-        /* Estilos del submenú (no visibles) */
-        .sidebar h2 { font-size: 1.2em; color: var(--color-border-light); padding: 0 20px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); width: 100%; margin-top: 0; margin-bottom: 10px; box-sizing: border-box; font-weight: 500; display: none; /* Ocultamos el submenú en la vista Mensajes */ }
-
-
-        /* Estilos del contenido*/
-        .main {
-            margin-left: 220px; /* Ajusta al ancho de la barra lateral */
-            display: flex; /* Usamos flexbox para dividir la vista de chat */
-            height: 100vh;
-            box-sizing: border-box;
-        }
-        
-        /* barra lateral de chats */
-        .chat-sidebar {
-            width: 350px; /* Ancho específico para la lista de chats */
-            background-color: var(--chat-bg-sidebar);
-            padding: 20px;
-            border-right: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        
-        .chat-sidebar h1 {
-            color: var(--color-text-dark);
-            font-size: 1.8em;
-            margin: 0 0 20px 0;
-        }
-
-        .search-box {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 10px 10px 40px; /* Espacio para el icono */
-            border: 1px solid var(--color-border-light);
-            border-radius: 20px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        
-        .search-box::before {
-            content: "🔍"; /* Icono de lupa */
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-            font-size: 1.1em;
-        }
-        
-        /* Ítem individual en la lista de chats */
-        .chat-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            position: relative;
-        }
-
-        .chat-item:hover {
-            background-color: #f0f0f0;
-        }
-        
-        .chat-item.active {
-            background-color: #e0f2f7; 
-        }
-        
-        .chat-item img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-        }
-        
-        .chat-info {
-            flex-grow: 1;
-        }
-        
-        .chat-info strong {
-            display: block;
-            color: var(--color-text-dark);
-            font-weight: 600;
-        }
-        
-        .chat-info p {
-            margin: 2px 0 0 0;
-            font-size: 0.9em;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .unread-count {
-            background-color: var(--color-light-blue);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 50%;
-            font-size: 0.8em;
-            font-weight: bold;
-        }
-
-        /* Ventana de conversacion*/
-        .chat-window {
-            flex-grow: 1; /* Ocupa el resto del espacio */
-            display: flex;
-            flex-direction: column;
-            background-color: #f9f9f9;
-        }
-        
-        .chat-header {
-            padding: 15px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            background-color: var(--chat-bg-sidebar);
-        }
-        
-        .chat-header .contact-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .chat-header .contact-info strong {
-            font-size: 1.3em;
-            color: var(--color-text-dark);
-        }
-        
-        .chat-header .actions i {
-            font-size: 1.5em;
-            color: #888;
-            margin-left: 20px;
-            cursor: pointer;
-        }
-
-        /* Área de mensajes */
-        .messages-area {
-            flex-grow: 1;
-            padding: 20px 30px;
-            overflow-y: auto;
-        }
-        
-        .date-divider {
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .date-divider span {
-            background-color: #e0e0e0;
-            color: #666;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.85em;
-        }
-
-        /* Burbujas de chat */
-        .message {
-            display: flex;
-            margin-bottom: 15px;
-        }
-
-        .message-content {
-            padding: 12px 15px;
-            border-radius: 18px;
-            max-width: 60%;
-            position: relative;
-        }
-
-        .message.other .message-content {
-            background-color: var(--chat-bubble-other);
-            margin-right: auto;
-            border-bottom-left-radius: 2px;
-            color: #333;
-        }
-
-        .message.self {
-            justify-content: flex-end;
-        }
-
-        .message.self .message-content {
-            background-color: var(--chat-bubble-user);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 2px;
-        }
-
-        .message-time {
-            display: block;
-            font-size: 0.75em;
-            margin-top: 5px;
-            text-align: right;
-            opacity: 0.8;
-        }
-        
-        /* Estilos específicos para la burbuja de gráfico */
-        .message-content .chart-box {
-            background-color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        
-        .message-content .chart-box strong {
-            display: block;
-            color: var(--color-text-dark);
-            margin-bottom: 10px;
-        }
-
-        /* Área de escritura */
-        .chat-input {
-            padding: 15px 30px;
-            border-top: 1px solid #ddd;
-            background-color: var(--chat-bg-sidebar);
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input input[type="text"] {
-            flex-grow: 1;
-            padding: 10px 15px;
-            border: 1px solid var(--color-border-light);
-            border-radius: 20px;
-            font-size: 1em;
-        }
-
-        .chat-input button {
-            background-color: var(--color-light-blue);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s;
-        }
-
-        .chat-input button:hover {
-            background-color: #2980b9;
-        }
-
-        /* Iconos de la cabecera del chat */
-        .header-icon {
-            font-size: 1.8em;
-            color: #888;
-            margin-left: 15px;
-            cursor: pointer;
-        }
-    </style>
+    
 </head>
 <body>
     
@@ -347,119 +17,51 @@
         <ul class="nav-links">
             <li><a href="Inicio.html">Inicio</a></li>
             <li><a href="Diario.html">Diario</a></li>
-            <li><a class="active" href="Mensajes.html">Mensajes</a></li> <li><a href="Perfil.html">Perfil</a></li>
+            <li><a class="active" href="chats.html">Mensajes</a></li> <li><a href="Perfil.html">Perfil</a></li>
             <li><a href="Configuracion.html">Configuración</a></li>
         </ul>
         
         </aside>
 
-    <main class="main">
+   <main class="main">
+    
+    <div class="chat-sidebar">
+        <h1>Mensajes</h1>
+        <div class="search-box">
+            <input type="text" id="chat-search-input" placeholder="Buscar un chat">
+        </div>
         
-        <div class="chat-sidebar">
-            <h1>Mensajes</h1>
-            <div class="search-box">
-                <input type="text" placeholder="Buscar un chat">
+        <div class="chat-list" id="chat-list-container"> 
             </div>
-            
-            <div class="chat-list">
-                
-                <div class="chat-item active">
-                    <img src="https://i.pravatar.cc/150?img=68" alt="Dr. Carlos Gutiérrez">
-                    <div class="chat-info">
-                        <strong>Dr. Carlos Gutiérrez</strong>
-                        <p>Entiendo. Recuerdo que la ajustamos...</p>
-                    </div>
-                </div>
-
-                <div class="chat-item">
-                    <img src="https://i.pravatar.cc/150?img=49" alt="Dra. Elena Prado">
-                    <div class="chat-info">
-                        <strong>Dra. Elena Prado</strong>
-                        <p>Buenas tardes, su cita fue agendada...</p>
-                    </div>
-                    <span class="unread-count">2</span>
-                </div>
-
-                <div class="chat-item">
-                    <img src="https://i.pravatar.cc/150?img=52" alt="Lic. Ana Méndez">
-                    <div class="chat-info">
-                        <strong>Lic. Ana Méndez</strong>
-                        <p>¿Qué tal te has sentido el día de hoy? </p>
-                    </div>
-                    <span class="unread-count">2</span>
-                </div>
-                
-                <div class="chat-item">
-                    <img src="https://i.pravatar.cc/150?img=57" alt="Dr. Florencio Estrada">
-                    <div class="chat-info">
-                        <strong>Dr. Florencio Estrada</strong>
-                        <p>Imagen</p>
-                    </div>
-                </div>
-                
-                <div class="chat-item">
-                    <img src="https://i.pravatar.cc/150?img=33" alt="Contacto 5">
-                    <div class="chat-info">
-                        <strong>Otro Profesional</strong>
-                        <p>Perfecto, quedo a la espera.</p>
-                    </div>
-                </div>
-
+    </div>
+    
+    <div class="chat-window">
+        
+        <div class="chat-header" id="chat-header">
+            <div class="contact-info">
+                <img id="header-avatar" src="" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
+                <strong id="header-name">Selecciona un chat</strong>
+            </div>
+            <div class="actions">
+                <span class="header-icon" id="delete-chat-btn" title="Eliminar Chat">🗑️</span> 
+                <span class="header-icon" title="Llamar">📞</span>
+                <span class="header-icon" title="Videollamada">🎥</span>
+                <span class="header-icon" title="Buscar">🔎</span>
             </div>
         </div>
         
-        <div class="chat-window">
-            
-            <div class="chat-header">
-                <div class="contact-info">
-                    <img src="https://i.pravatar.cc/150?img=68" alt="Dr. Carlos Gutiérrez" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 15px;">
-                    <strong>Dr. Carlos Gutiérrez</strong>
-                </div>
-                <div class="actions">
-                    <span class="header-icon">📞</span>
-                    <span class="header-icon">🎥</span>
-                    <span class="header-icon">🔎</span>
-                </div>
-            </div>
-            
-            <div class="messages-area">
-                
-                <div class="date-divider"><span>Hoy</span></div>
-                
-                <div class="message other">
-                    <div class="message-content">
-                        Dr. Gutiérrez, buenas tardes. Le escribo porque hoy en el colegio me dijeron que Thiago tuvo un día difícil y no terminó varias actividades.
-                        <div class="message-time">3:05 p.m.</div>
-                    </div>
-                </div>
-
-                <div class="message self">
-                    <div class="message-content">
-                        Buenas tardes, gracias por el aviso. No se preocupe, es común con el TDAH al inicio de las semanas. ¿Hubo algo específico que detonó esa dificultad?
-                        <div class="message-time">4:37 p.m.</div>
-                    </div>
-                </div>
-
-                <div class="message other">
-                    <div class="message-content">
-                        Parece que fue en la clase de matemáticas. La profesora dijo que se levantó tres veces y no logró enfocarse en los ejercicios. Creo que el cambio de medicación le está afectando.
-                        <div class="chart-box">
-                            <strong>Estadísticas de ánimo semanal</strong>
-                            <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22120%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20fill%3D%22%23f9f9f9%22/%3E%3Cline%20x1%3D%2210%22%20y1%3D%22110%22%20x2%3D%22190%22%20y2%3D%22110%22%20stroke%3D%22%23ccc%22%20stroke-width%3D%221%22/%3E%3Cpolyline%20points%3D%2210%2C100%2040%2C50%2070%2C80%20100%2C30%20130%2C60%20160%2C20%20190%2C70%22%20fill%3D%22none%22%20stroke%3D%22%233498db%22%20stroke-width%3D%222%22/%3E%3Ctext%20x%3D%22100%22%20y%3D%2260%22%20font-family%3D%22Arial%22%20font-size%3D%2210%22%20fill%3D%22%23888%22%20text-anchor%3D%22middle%22%3EGráfico%20de%20Ejemplo%3C/text%3E%3C/svg%3E" alt="Gráfico de estadísticas" style="max-width: 100%; height: auto; margin: 5px 0;">
-                            <div style="font-size: 0.8em; color: #666; margin-top: 5px;">Estado de ánimo promedio: 6.38 | Emoción más frecuente: Feliz</div>
-                        </div>
-                        <div class="message-time">4:38 p.m.</div>
-                    </div>
-                </div>
-
-            </div>
-            
-            <div class="chat-input">
-                <input type="text" placeholder="Escribir mensaje...">
-                <button title="Enviar">▶</button>
-            </div>
-            
+        <div class="messages-area" id="messages-area"> 
+            <p style="text-align: center; color: #777; margin-top: 50px;">Selecciona una conversación para empezar.</p>
         </div>
-    </main>
+        
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Escribir mensaje...">
+            <button id="send-message-btn" title="Enviar">▶</button>
+        </div>
+        
+    </div>
+</main>
+<script src="javascript/chats_psicologos.js"></script>
+
 </body>
 </html>

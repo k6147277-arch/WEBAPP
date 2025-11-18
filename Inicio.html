@@ -4,311 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindWell - Agenda y Psicólogos</title>
-    
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-        }
-
-        /* variables de color*/
-        :root {
-            --color-dark-blue: #2c3e50; 
-            --color-light-blue: #3498db; 
-            --color-text-light: #ecf0f1; 
-            --color-text-dark: #34495e; 
-            --color-border-light: #bdc3c7; 
-            --color-hover: #34495e; 
-            
-            /* Colores de estado de citas de la imagen */
-            --color-completed: #2ecc71;  /* Verde */
-            --color-pending: #f1c40f;    /* Amarillo */
-            --color-canceled: #e74c3c;   /* Rojo */
-            --color-day-highlight: #9b59b6; /* Morado para el día actual/seleccionado */
-            --color-day-highlight-alt: #f39c12; /* Naranja/Amarillo para otro día */
-        }
-
-
-        /* Estilos de la barra lateral fija*/
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 220px; 
-            background-color: var(--color-dark-blue);
-            color: var(--color-text-light);
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 100;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .sidebar .logo {
-            font-size: 2.2em;
-            font-weight: 700;
-            margin-bottom: 40px;
-            padding: 0 20px;
-            color: var(--color-text-light);
-            letter-spacing: 1px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .sidebar .nav-links { list-style: none; padding: 0; margin: 0; width: 100%; }
-        .sidebar .nav-links a {
-            display: block;
-            padding: 15px 20px;
-            color: var(--color-text-light);
-            text-decoration: none;
-            transition: background-color 0.3s;
-            font-size: 1.1em;
-        }
-
-        .sidebar .nav-links a:hover { background-color: var(--color-hover); }
-
-        .sidebar .nav-links a.active {
-            background-color: var(--color-light-blue);
-            font-weight: 600;
-            border-left: 5px solid white;
-            padding-left: 15px;
-        }
-
-
-        /* contenido principal*/
-        .main-content {
-            margin-left: 220px; /* Desplaza el contenido al lado de la barra lateral */
-            padding: 30px;
-            /* Uso de Flexbox para alinear las nuevas secciones horizontalmente */
-            display: flex;
-            flex-direction: column; /* Organiza las secciones verticalmente */
-            gap: 30px; /* Espacio entre las secciones de contenido */
-        }
-
-        /* Estilos de título */
-        .main-content h2 {
-            color: var(--color-text-dark);
-            font-size: 2em;
-            margin: 0 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--color-border-light);
-        }
-        
-        .main-content h3 {
-            color: var(--color-text-dark);
-            font-size: 1.5em;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-
-    
-        .main-content section {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        /* nuevo contenedor de 3 columnas */
-        .three-column-layout {
-            display: flex;
-            gap: 20px; /* Espacio entre las 3 columnas */
-            width: 100%;
-            max-width: 1300px; /* Limita el ancho para que no se extienda demasiado */
-            margin-top: 20px;
-        }
-
-        /* Estilos para las nuevas secciones */
-        .col-calendar, .col-status, .col-psychologists {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            height: fit-content;
-        }
-        
-        .col-calendar { width: 300px; flex-shrink: 0; }
-        .col-status { width: 300px; flex-shrink: 0; }
-        .col-psychologists { flex-grow: 1; min-width: 450px; } 
-        
-        /* Títulos de columna */
-        .three-column-layout h2 {
-            color: var(--color-text-dark);
-            font-size: 1.8em;
-            margin: 0 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: none; 
-        }
-        
-        /* calendario */
-        .calendar-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            font-weight: 600;
-            border: 1px solid var(--color-border-light);
-            border-radius: 4px;
-            padding: 5px;
-        }
-
-        .calendar-nav button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1em;
-            color: var(--color-text-dark);
-            padding: 0 5px;
-        }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-        
-        .calendar-grid div {
-            padding: 8px 5px;
-            border-radius: 4px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .calendar-grid .day-name { font-weight: bold; color: var(--color-text-dark); cursor: default; }
-
-        /* Colores específicos de la imagen */
-        .calendar-grid .day-number.red { background-color: var(--color-canceled); color: white; }
-        .calendar-grid .day-number.green { background-color: var(--color-completed); color: white; }
-        .calendar-grid .day-number.purple { background-color: var(--color-day-highlight); color: white; }
-        .calendar-grid .day-number.yellow { background-color: var(--color-day-highlight-alt); color: #333; }
-        .calendar-grid .day-number.red, .calendar-grid .day-number.green, .calendar-grid .day-number.purple { color: white; }
-
-
-        
-        .appointment-list { display: flex; flex-direction: column; gap: 15px; }
-        
-        .appointment-item {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--color-border-light);
-            border-radius: 6px;
-            padding: 10px;
-            background-color: #fff;
-            position: relative;
-        }
-
-        .status-indicator {
-            width: 5px;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: 6px 0 0 6px;
-        }
-        
-        /* Colores de las líneas laterales */
-        .status-completed { border-left: 5px solid var(--color-completed); }
-        .status-pending { border-left: 5px solid var(--color-pending); }
-        .status-canceled { border-left: 5px solid var(--color-canceled); }
-
-        .appointment-info { padding-left: 15px; flex-grow: 1; }
-
-        .appointment-info .time { font-weight: 600; font-size: 1.0em; color: var(--color-text-dark); display: block; }
-        .appointment-info .doctor { font-size: 0.9em; color: #666; }
-        
-        .appointment-item select {
-            padding: 5px;
-            border: 1px solid var(--color-border-light);
-            border-radius: 4px;
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-
-        /* Estilo de los psicologo */
-        .search-psychologist { position: relative; margin-bottom: 25px; }
-
-        .search-psychologist input {
-            width: 100%;
-            padding: 10px 15px 10px 40px; 
-            border: 1px solid var(--color-border-light);
-            border-radius: 20px;
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        
-        .search-psychologist::before {
-            content: "🔍 Buscar Psicólogo";
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-            font-size: 1em;
-            pointer-events: none; 
-        }
-        
-        .search-psychologist input:focus::before { content: ""; } 
-
-
-        .psychologist-card {
-            display: flex;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            background-color: #fff;
-            align-items: flex-start;
-        }
-
-        .psychologist-card img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 15px;
-            flex-shrink: 0; 
-        }
-
-        .psychologist-details { flex-grow: 1; }
-
-        .psychologist-details h4 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1em;
-            color: var(--color-text-dark);
-            margin: 0 0 5px 0;
-        }
-
-        .psychologist-details h4 select {
-            padding: 5px;
-            border: 1px solid var(--color-border-light);
-            border-radius: 4px;
-            font-size: 0.85em;
-            background: none;
-            cursor: pointer;
-        }
-
-        .rating {
-            color: var(--color-pending); 
-            font-size: 0.9em;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .description {
-            font-size: 0.85em;
-            color: #555;
-            line-height: 1.4;
-        }
-
-    </style>
+    <link rel="stylesheet" href="style/inicio.css">       
 </head>
 <body>
 
@@ -328,13 +24,14 @@
         <div class="three-column-layout">
             
             <section class="col-calendar">
+                <h2>Mi Agenda</h2>
                 <div class="calendar-nav">
-                    <button>&#9664;</button>
-                    <span>September 29, 2025</span>
-                    <button>&#9654;</button>
+                    <button id="prev-month-btn">&#9664;</button> 
+                    <span id="current-month-year">Septiembre 2025</span> 
+                    <button id="next-month-btn">&#9654;</button> 
                 </div>
                 
-                <div class="calendar-grid">
+                <div class="calendar-grid" id="calendar-days-grid">
                     <div class="day-name">Su</div>
                     <div class="day-name">Mo</div>
                     <div class="day-name">Tu</div>
@@ -342,147 +39,43 @@
                     <div class="day-name">Th</div>
                     <div class="day-name">Fr</div>
                     <div class="day-name">Sa</div>
-                    
-                    <div>&nbsp;</div>
-                    <div>1</div>
-                    <div>2</div>
-                    <div class="day-number red">3</div>
-                    <div class="day-number red">4</div>
-                    <div class="day-number">5</div>
-                    <div class="day-number">6</div>
-
-                    <div class="day-number">7</div>
-                    <div class="day-number">8</div>
-                    <div class="day-number">9</div>
-                    <div class="day-number">10</div>
-                    <div class="day-number">11</div>
-                    <div class="day-number">12</div>
-                    <div class="day-number">13</div>
-
-                    <div class="day-number green">14</div>
-                    <div class="day-number green">15</div>
-                    <div class="day-number green">16</div>
-                    <div class="day-number">17</div>
-                    <div class="day-number">18</div>
-                    <div class="day-number">19</div>
-                    <div class="day-number">20</div>
-
-                    <div class="day-number">21</div>
-                    <div class="day-number">22</div>
-                    <div class="day-number">23</div>
-                    <div class="day-number">24</div>
-                    <div class="day-number">25</div>
-                    <div class="day-number">26</div>
-                    <div class="day-number">27</div>
-
-                    <div class="day-number">28</div>
-                    <div class="day-number purple">29</div>
-                    <div class="day-number yellow">30</div>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                    <div>&nbsp;</div>
-                </div>
-            </section>
+                </div> 
+            </section> 
             
             <section class="col-status">
                 <h2>Estado de la cita</h2>
-                
-                <div class="appointment-list">
-                    <div class="appointment-item status-completed">
-                        <div class="appointment-info">
-                            <span class="time">9:00 a.m.</span>
-                            <span class="doctor">Dr. Carlos Gutiérrez</span>
-                        </div>
-                        <select>
-                            <option value="completed">Completada</option>
-                        </select>
-                    </div>
-                    
-                    <div class="appointment-item status-pending">
-                        <div class="appointment-info">
-                            <span class="time">3:00 p.m.</span>
-                            <span class="doctor">Dr. David Palacio</span>
-                        </div>
-                        <select>
-                            <option value="pending">Pendiente</option>
-                        </select>
-                    </div>
-                    
-                    <div class="appointment-item status-canceled">
-                        <div class="appointment-info">
-                            <span class="time">9:00 a.m.</span>
-                            <span class="doctor">Dr. Carlos Gutiérrez</span>
-                        </div>
-                        <select>
-                            <option value="canceled">Cancelada</option>
-                        </select>
-                    </div>
+                <div class="appointment-list" id="appointment-list-container"> 
+                    <p style="text-align: center; color: #777; margin-top: 15px;">Selecciona un día en el calendario.</p>
                 </div>
             </section>
 
             <section class="col-psychologists">
-                <h2>Lista de Psicólogos</h2>
+                <h2>Buscar Especialista</h2>
                 
                 <div class="search-psychologist">
-                    <input type="text" placeholder="" title="Buscar Psicólogo">
+                    <input type="text" id="search-input" placeholder="Buscar Psicólogo..." title="Buscar Psicólogo">
                 </div>
 
-                <div class="psychologist-card">
-                    <img src="https://i.pravatar.cc/150?img=68" alt="Dr. Carlos Gutiérrez">
-                    <div class="psychologist-details">
-                        <h4>
-                            Dr. Carlos Gutiérrez
-                            <select>
-                                <option>Agenda</option>
-                            </select>
-                        </h4>
-                        <span class="rating">⭐⭐⭐⭐⭐</span>
-                        <p class="description">
-                            Psicólogo Infantil y Juvenil. Especialista en Trastorno por Déficit de Atención con Hiperactividad (TDAH) y Dificultades de Aprendizaje.
-                            Psicólogo clínico con más de 8 años de experiencia.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="psychologist-card">
-                    <img src="https://i.pravatar.cc/150?img=49" alt="Lic. Ana Méndez">
-                    <div class="psychologist-details">
-                        <h4>
-                            Lic. Ana Méndez
-                            <select>
-                                <option>Agenda</option>
-                            </select>
-                        </h4>
-                        <span class="rating">⭐⭐⭐⭐</span>
-                        <p class="description">
-                            Licenciada en Psicología Clínica, experta en terapia cognitivo-conductual (TCC) para adultos y adolescentes. Especialista en manejo de estrés y ansiedad.
-                        </p>
-                    </div>
+                <div id="psychologist-list">
+                    <p style="text-align: center; color: #777; margin-top: 15px;">Cargando psicólogos...</p>
                 </div>
                 
-                </section>
+            </section>
         </div>
         
-        <section class="calendar">
-            <h3>Datos Personales</h3>
-            <p>
-                <label for="dob"> Fecha de Nacimiento:</label>
-                <br>
-                <input type="date" name="dob" id="dob" placeholder="mm/dd/aaaa" autofocus required>
-            </p>
-        </section>
-
         <section class="info-panel">
-            <h3>Párrafo de Bienvenida</h3>
-            <p>Texto</p>
-            <p class="highlight">Párrafo destacado: Esta área de contenido se desplaza al hacer scroll, ¡pero la barra lateral permanece fija!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <p>Más contenido para probar el desplazamiento del área principal.</p>
-            <p>Otro párrafo largo de relleno.</p>
-            <p>Texto de prueba final.</p>
+            <h3>¡Bienvenido a MindWell! Tu Primer Paso hacia el Bienestar!</h3>
+            <p class="highlight">
+                🧠 ¡Te damos una cálida bienvenida a MindWell! Entendemos que dar el paso hacia la búsqueda de apoyo psicológico es un acto de gran valentía y amor propio. 
+                En MindWell, te abrimos las puertas a un espacio seguro, confidencial y empático, diseñado para acompañarte profesionalmente en tu viaje hacia el bienestar emocional y el crecimiento personal.
+                Además de conectarte con nuestros especialistas, tendrás acceso a tu **Apartado Personal**. Este es tu espacio privado para la reflexión, donde podrás completar tests semanales diseñados para medir y comprender tu estado emocional en tiempo real, y utilizar el **Diario Personal** como una herramienta de desahogo y autoexploración.
+                En MindWell, te facilitamos las herramientas para que te relajes, te observes y tomes las riendas de tu viaje hacia una vida más serena y consciente. **¡Estamos listos para empezar!** </p>
         </section>
 
     </main>
+    
+    <script src="javascript/calendar.js"></script> 
+    <script src="javascript/chats_psicologos.js"></script> 
+
 </body>
 </html>
